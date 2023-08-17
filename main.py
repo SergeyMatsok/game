@@ -1,6 +1,7 @@
 import pygame
 import controls
 from gun import Gun
+from pygame.sprite import Group
 
 
 def run():
@@ -10,13 +11,13 @@ def run():
     pygame.display.set_caption("Космические защитники")
     bg_color = (0, 0, 0)  # цвет
     gun = Gun(screen)
+    bullets = Group()
 
     while True:   # Бесконечный цикл
         controls.events(gun)
         gun.update_gun()  # обновляет позицию пушки
-        screen.fill(bg_color)  # заливка окна
-        gun.output()
-        pygame.display.flip()  # Последний экран
+        bullets.update()  # помещаем пульки на экран
+        controls.update(bg_color, screen, gun)
 
 
 run()

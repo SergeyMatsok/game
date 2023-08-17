@@ -1,8 +1,9 @@
 import pygame
 import sys
+from bullet import Bullet
 
 
-def events(gun):
+def events(screen, gun, bullets):
     """Обработа событий"""
     for event in pygame.event.get():  # цикл для перебоки событитий
         if event.type == pygame.QUIT:  # Событие при нажатии на закрыть окно
@@ -14,6 +15,9 @@ def events(gun):
             # влево
             elif event.key == pygame.K_a:
                 gun.mleft = True
+            elif event.key == pygame.K_SPACE:
+                new_bullet = Bullet(screen, gun)
+                bullets.add(new_bullet)
         elif event.type == pygame.KEYUP:
             # вправо
             if event.key == pygame.K_d:
@@ -21,3 +25,10 @@ def events(gun):
             # влево
             elif event.key == pygame.K_a:
                 gun.mleft = False
+
+
+def update(bg_color, screen, gun, bullets ):
+    """обновление экрана"""
+    screen.fill(bg_color)  # заливка окна
+    gun.output()
+    pygame.display.flip()  # Последний экран
