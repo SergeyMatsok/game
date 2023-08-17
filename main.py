@@ -14,10 +14,10 @@ def run():
     bullets = Group()
 
     while True:   # Бесконечный цикл
-        controls.events(gun)
+        controls.events(screen, gun, bullets)
         gun.update_gun()  # обновляет позицию пушки
         bullets.update()  # помещаем пульки на экран
-        controls.update(bg_color, screen, gun)
+        controls.update(bg_color, screen, gun, bullets)
 
 
 run()

@@ -30,5 +30,7 @@ def events(screen, gun, bullets):
 def update(bg_color, screen, gun, bullets ):
     """обновление экрана"""
     screen.fill(bg_color)  # заливка окна
+    for bullet in bullets.sprites():
+        bullet.drop_bullet()
     gun.output()
     pygame.display.flip()  # Последний экран
