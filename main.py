@@ -12,12 +12,16 @@ def run():
     bg_color = (0, 0, 0)  # цвет
     gun = Gun(screen)
     bullets = Group()
+    aliens = Group()
+    controls.create_army(screen, aliens)
 
     while True:   # Бесконечный цикл
         controls.events(screen, gun, bullets)
         gun.update_gun()  # обновляет позицию пушки
         bullets.update()  # помещаем пульки на экран
-        controls.update(bg_color, screen, gun, bullets)
+        controls.update(bg_color, screen, gun, aliens, bullets)
+        controls.update_bullets(bullets)
+        controls.update_aliens(aliens)
 
 
 run()
