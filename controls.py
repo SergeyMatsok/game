@@ -38,12 +38,13 @@ def update(bg_color, screen, gun, aliens, bullets):
     pygame.display.flip()  # Последний экран
 
 
-def update_bullets(bullets):
+def update_bullets(aliens, bullets):
     """"Обновляет позиции пуль"""
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)  # Удаляем пули из контейнера
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
 
 def update_aliens(aliens):
@@ -57,7 +58,7 @@ def create_army(screen, aliens):
     alien_width = alien.rect.width
     number_alien_x = int((700 - 2 * alien_width) / alien_width)
     alien_height = alien.rect.height
-    number_alien_y = int((800 - 100 - 2 * alien_height) / alien_height)
+    number_alien_y = int((800 - 100 - 3 * alien_height) / alien_height)
 
     for row_number in range(number_alien_y - 1):
         for alien_number in range(number_alien_x):

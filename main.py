@@ -20,7 +20,7 @@ def run():
         gun.update_gun()  # обновляет позицию пушки
         bullets.update()  # помещаем пульки на экран
         controls.update(bg_color, screen, gun, aliens, bullets)
-        controls.update_bullets(bullets)
+        controls.update_bullets(aliens, bullets)
         controls.update_aliens(aliens)
 
 
