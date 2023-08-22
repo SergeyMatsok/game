@@ -2,6 +2,7 @@ import pygame
 import controls
 from gun import Gun
 from pygame.sprite import Group
+from stats_life import Stats
 
 
 def run():
@@ -14,6 +15,7 @@ def run():
     bullets = Group()
     aliens = Group()
     controls.create_army(screen, aliens)
+    stats = Stats()
 
     while True:   # Бесконечный цикл
         controls.events(screen, gun, bullets)
@@ -21,7 +23,7 @@ def run():
         bullets.update()  # помещаем пульки на экран
         controls.update(bg_color, screen, gun, aliens, bullets)
         controls.update_bullets(aliens, bullets)
-        controls.update_aliens(aliens)
+        controls.update_aliens(stats, screen, gun, aliens, bullets)
 
 
 run()

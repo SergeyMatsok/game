@@ -2,6 +2,7 @@ import pygame
 import sys
 from bullet import Bullet
 from alien import Alien
+import time
 
 
 def events(screen, gun, bullets):
@@ -47,9 +48,21 @@ def update_bullets(aliens, bullets):
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
 
-def update_aliens(aliens):
+def gun_kill(stats, screen, gun, aliens, bullets):
+    """столкновение пушки и армии"""
+    stats.guns_left -= 1
+    aliens.empty()  # удаляет объекты пришельцев
+    bullets.empty()  # удаляет объекты пули
+    create_army(screen, aliens)   # пересоздание армии 
+    gun.create_gun()
+    time.sleep(1)
+
+
+def update_aliens(stats, screen, gun, aliens, bullets):
     """обновляет позицию инопланитян"""
     aliens.update()
+    if pygame.sprite.spritecollideany(gun, aliens):
+        gun_kill(stats, screen, gun, aliens, bullets)
 
 
 def create_army(screen, aliens):
