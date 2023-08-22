@@ -1,6 +1,7 @@
 import pygame.font
-from gun import Gun
+# from gun import Gun
 from pygame.sprite import Group
+from gaming_lives import Hart
 
 
 class Scores():
@@ -35,7 +36,7 @@ class Scores():
         """количество жизней"""
         self.guns = Group()
         for gun_number in range(self.stats.guns_left):
-            gun = Gun(self.screen)
+            gun = Hart(self.screen)
             gun.rect.x = 15 + gun_number * gun.rect.width
             gun.rect.y = 20
             self.guns.add(gun)
@@ -45,4 +46,3 @@ class Scores():
         self.screen.blit(self.score_img, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.guns.draw(self.screen)
-
