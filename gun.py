@@ -1,11 +1,12 @@
 import pygame
+from pygame.sprite import Sprite
 
 
-class Gun():
+class Gun(Sprite):
 
     def __init__(self, screen):  # метод инициализации(Принимает сам графический объект)
         """инициализация пушки"""
-
+        super(Gun, self).__init__()  # При инициализации класса подтягиваем все при помощи метода super
         self.screen = screen    # Получаем экран
         self.image = pygame.image.load('images/gun_image_1.png')  # Загружаем изображение
         self.rect = self.image.get_rect()  # Получаем изображение как прямоугольник

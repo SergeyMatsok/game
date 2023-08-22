@@ -29,9 +29,10 @@ def events(screen, gun, bullets):
                 gun.mleft = False
 
 
-def update(bg_color, screen, gun, aliens, bullets):
+def update(bg_color, screen, stats, sc, gun, aliens, bullets):
     """обновление экрана"""
     screen.fill(bg_color)  # заливка окна
+    sc.show_score()
     for bullet in bullets.sprites():
         bullet.drop_bullet()
     gun.output()
@@ -39,30 +40,54 @@ def update(bg_color, screen, gun, aliens, bullets):
     pygame.display.flip()  # Последний экран
 
 
-def update_bullets(aliens, bullets):
+def update_bullets(screen, stats, sc, aliens, bullets):
     """"Обновляет позиции пуль"""
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)  # Удаляем пули из контейнера
-    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)  # В этот момент уничтожаются пришельцы
+    if collisions:
+        for aliens in collisions.values():
+            stats.score += 1 * len(aliens)  # Увеличивает счет
+        sc.image_score()
+        check_high_score(stats, sc)
+    if len(aliens) == 0:
+        bullets.empty()
+        create_army(screen, aliens)
+        sc.image_guns()
 
 
-def gun_kill(stats, screen, gun, aliens, bullets):
+def gun_kill(stats, screen, sc, gun, aliens, bullets):
     """столкновение пушки и армии"""
-    stats.guns_left -= 1
-    aliens.empty()  # удаляет объекты пришельцев
-    bullets.empty()  # удаляет объекты пули
-    create_army(screen, aliens)   # пересоздание армии 
-    gun.create_gun()
-    time.sleep(1)
+    if stats.guns_left > 0:
+        stats.guns_left -= 1
+        sc.image_guns()
+        aliens.empty()  # удаляет объекты пришельцев
+        bullets.empty()  # удаляет объекты пули
+        create_army(screen, aliens)   # пересоздание армии 
+        gun.create_gun()
+        time.sleep(1)
+    else:
+        stats.run_game = False
+        sys.exit()
 
 
-def update_aliens(stats, screen, gun, aliens, bullets):
+def update_aliens(stats, screen, sc, gun, aliens, bullets):
     """обновляет позицию инопланитян"""
     aliens.update()
     if pygame.sprite.spritecollideany(gun, aliens):
-        gun_kill(stats, screen, gun, aliens, bullets)
+        gun_kill(stats, screen, sc, gun, aliens, bullets)
+    aliens_check(stats, screen, sc, gun, aliens, bullets)
+
+
+def aliens_check(stats, screen, sc, gun, aliens, bullets):
+    """проверка на соприкосновение армии и нижнем краем экрана"""
+    screen_rect = screen.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            gun_kill(stats, screen, sc, gun, aliens, bullets)
+            break
 
 
 def create_army(screen, aliens):
@@ -81,3 +106,12 @@ def create_army(screen, aliens):
             alien.rect.x = alien.x
             alien.rect.y = alien.rect.height + (alien.rect.height * row_number)
             aliens.add(alien)
+
+
+def check_high_score(stats, sc):
+    """проверка новых рекордов"""
+    if stats.score > stats.high_score:
+        stats.high_score = stats.score
+        sc.image_high_score()
+        with open('high_score.txt', 'w') as wr:
+            wr.write(str(stats.high_score))
